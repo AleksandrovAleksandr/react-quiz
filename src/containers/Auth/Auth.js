@@ -3,9 +3,9 @@ import classes from './Auth.module.css'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Input/Input'
 import is from 'is_js'
-import Axios from 'axios'
-
-export default class Auth extends React.Component {
+import {connect} from 'react-redux'
+import {auth} from '../../store/actions/auth'
+class Auth extends React.Component {
   state = {
     isFormValid: false,
     formControls: {
@@ -37,37 +37,19 @@ export default class Auth extends React.Component {
   }
 
   loginHandler = async () => {
-    const authData = {
-      email: this.state.formControls.email.value,
-      password: this.state.formControls.password.value,
-      returnSecureToken: true,
-    }
-    try {
-      const response = await Axios.post(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAvqsKo7MyVkVc25VP9lF6iYrZTQw1cYjM',
-        authData
-      )
-      console.log(response.data)
-    } catch (e) {
-      console.log(e)
-    }
+    this.props.auth(
+      this.state.formControls.email.value,
+      this.state.formControls.password.value,
+      true
+    )
   }
 
-  registerHandler = async () => {
-    const authData = {
-      email: this.state.formControls.email.value,
-      password: this.state.formControls.password.value,
-      returnSecureToken: true,
-    }
-    try {
-      const response = await Axios.post(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAvqsKo7MyVkVc25VP9lF6iYrZTQw1cYjM',
-        authData
-      )
-      console.log(response.data)
-    } catch (e) {
-      console.log(e)
-    }
+  registerHandler = () => {
+    this.props.auth(
+      this.state.formControls.email.value,
+      this.state.formControls.password.value,
+      false
+    )
   }
 
   submitHandler = event => {
@@ -160,3 +142,12 @@ export default class Auth extends React.Component {
     )
   }
 }
+
+function mapDispathToProps(dispatch) {
+  return {
+    auth: (email, password, isLogin) =>
+      dispatch(auth(email, password, isLogin)),
+  }
+}
+
+export default connect(null, mapDispathToProps)(Auth)
