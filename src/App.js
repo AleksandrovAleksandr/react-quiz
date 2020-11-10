@@ -49,7 +49,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    authLogin: () => dispatch(autoLogin()),
+    autoLogin: () => dispatch(autoLogin()),
   }
 }
 
